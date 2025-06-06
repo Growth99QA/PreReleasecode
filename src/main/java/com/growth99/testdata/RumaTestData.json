@@ -1,0 +1,18 @@
+{
+	
+	"validateCareerSubMenu":{
+		"expectedCareerTitle":"CAREERS",
+		"assertValidationText":"Title validation failed"
+	},
+	
+	"submitContactForm":{
+		"firstName":"QA",
+		"lastName":"Testing",
+		"email":"qa@growth99.com"
+	},
+	
+	"validateBotoxAndDysportServiceSection":{
+		"botoxServiceTitle":"Botox and Dysport",
+		"botoxServiceUrl":"https://ada1.gogroth.com/botox-dysport-in-lehi-ut/"
+	}
+}

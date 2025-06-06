@@ -1,0 +1,13 @@
+{
+  "validateCareerSubMenu": {
+    "expectedAboutUsTitle": "ABOUT US",
+    "assertValidationText": "Title validation failed"
+  },
+  "validateAboutUsTabTitle": {
+    "expectedTabTitle": "About Us Cherry Medical Aesthetics | Meet Our Expert Team",
+    "assertTabTitleValidation": "Validation of Tab title for About US page failed"
+  },
+  "validateAboutUsHeroImage": {
+    "assertAboutUsHeroImageValidation": "Hero image validation failed"
+  }
+}
