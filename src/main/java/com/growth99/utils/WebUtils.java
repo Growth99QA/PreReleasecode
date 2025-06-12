@@ -5,12 +5,17 @@ import org.openqa.selenium.interactions.Actions;
 import org.openqa.selenium.support.ui.*;
 
 import com.aventstack.extentreports.ExtentTest;
+import com.aventstack.extentreports.MediaEntityBuilder;
 import com.aventstack.extentreports.Status;
 
+
+import java.io.File;
 import java.io.IOException;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.nio.file.Files;
+import java.nio.file.StandardCopyOption;
 import java.time.Duration;
 import java.util.ArrayList;
 import java.util.List;
@@ -27,46 +32,46 @@ public class WebUtils {
 		this.driver = driver;
 		this.wait = new WebDriverWait(driver, Duration.ofSeconds(15));
 	}
-	
-	 private ExtentTest getExtentTest() {
-	        return ExtentTestManager.getTest();
-	    }
 
-	 private String getElementLocator(WebElement element) {
-	        String desc = element.toString();
-	        return desc.substring(desc.indexOf("->") + 2, desc.length() - 1).trim();
-	    }
+	private ExtentTest getExtentTest() {
+		return ExtentTestManager.getTest();
+	}
 
-	    private void logSuccess(String message) {
-	        logger.log(Level.INFO, message);
-	        getExtentTest().log(Status.INFO, message);
-	    }
+	private String getElementLocator(WebElement element) {
+		String desc = element.toString();
+		return desc.substring(desc.indexOf("->") + 2, desc.length() - 1).trim();
+	}
 
-	    private void logFailure(String error) {
-	        logger.log(Level.SEVERE, error);
-	        getExtentTest().log(Status.FAIL, error);
-	    }
+	private void logSuccess(String message) {
+		logger.log(Level.INFO, message);
+		getExtentTest().log(Status.INFO, message);
+	}
 
-	    public void clickOnElement(WebElement element) {
-	        try {
-	            wait.until(ExpectedConditions.elementToBeClickable(element));
-	            element.click();
-	            logSuccess("Clicked on element: " + getElementLocator(element));
-	        } catch (Exception e) {
-	            logFailure("Failed to click on element: " + e.getMessage());
-	        }
-	    }
+	private void logFailure(String error) {
+		logger.log(Level.SEVERE, error);
+		getExtentTest().log(Status.FAIL, error);
+	}
 
-	    public void enterText(WebElement element, String text) {
-	        try {
-	            wait.until(ExpectedConditions.visibilityOf(element));
-	            element.clear();
-	            element.sendKeys(text);
-	            logSuccess("Entered text '" + text + "' into element: " + getElementLocator(element));
-	        } catch (Exception e) {
-	            logFailure("Failed to enter text: " + e.getMessage());
-	        }
-	    }
+	public void clickOnElement(WebElement element) {
+		try {
+			wait.until(ExpectedConditions.elementToBeClickable(element));
+			element.click();
+			logSuccess("Clicked on element: " + getElementLocator(element));
+		} catch (Exception e) {
+			logFailure("Failed to click on element: " + e.getMessage());
+		}
+	}
+
+	public void enterText(WebElement element, String text) {
+		try {
+			wait.until(ExpectedConditions.visibilityOf(element));
+			element.clear();
+			element.sendKeys(text);
+			logSuccess("Entered text '" + text + "' into element: " + getElementLocator(element));
+		} catch (Exception e) {
+			logFailure("Failed to enter text: " + e.getMessage());
+		}
+	}
 
 	public void clearAndEnterText(WebElement element, String text) {
 		try {
@@ -84,7 +89,7 @@ public class WebUtils {
 			wait.until(ExpectedConditions.visibilityOf(element));
 			String text = element.getText();
 			logSuccess("Got text '" + text + "' from element: " +getElementLocator(element));
-			
+
 			return text;
 		} catch (Exception e) {
 			logFailure("Exception while getting text from element: " +e.getMessage());
@@ -113,7 +118,7 @@ public class WebUtils {
 		} catch (Exception e) {
 			//e.getMessage());
 			logFailure("Exception while hovering over element: " +e.getMessage());
-		
+
 		}
 	}
 
@@ -123,7 +128,7 @@ public class WebUtils {
 			wait.until(ExpectedConditions.elementToBeClickable(element));
 			actions.doubleClick(element).perform();
 			logSuccess( "Double clicked element: "  +getElementLocator( element));
-			
+
 		} catch (Exception e) {
 			logFailure("Exception while double clicking element: " +e.getMessage());
 		}
@@ -149,7 +154,7 @@ public class WebUtils {
 			logSuccess("Selected dropdown option by visible text: " + visibleText +getElementLocator( element));
 		} catch (Exception e) {
 			logFailure("Exception whileselecting dropdown by visible text:  "+ visibleText +e.getMessage());
-			
+
 		}
 	}
 
@@ -158,7 +163,7 @@ public class WebUtils {
 			Select select = new Select(element);
 			select.selectByValue(value);
 			logSuccess("Selected dropdown option by value: " + value +getElementLocator( element));
-			
+
 		} catch (Exception e) {
 			logFailure("Exception while selecting dropdown by value: " + value  +e.getMessage()); 
 		}
@@ -282,33 +287,34 @@ public class WebUtils {
 	}
 
 	// Frame & Window Handling
-	//need to work on the logsuccess and logFaliure
 	
+
 
 	public void switchToFrameByIndex(int index) {
 		try {
 			driver.switchTo().frame(index);
-			logger.log(Level.INFO, "Switched to frame by index: " + index);
+			logSuccess( "Switched to frame by index: " + index);
 		} catch (Exception e) {
-			logger.log(Level.SEVERE, "Exception while switching to frame by index: " + index, e);
+			logFailure("Exception while switching to frame by index: " + index +e.getMessage()); 
 		}
 	}
 
 	public void switchToFrameByElement(WebElement element) {
 		try {
 			driver.switchTo().frame(element);
-			logger.log(Level.INFO, "Switched to frame by element: " + element);
+			logSuccess( "Switched to frame by element: " + element);
 		} catch (Exception e) {
-			logger.log(Level.SEVERE, "Exception while switching to frame by element: " + element, e);
+			logFailure("Exception while switching to frame by element: " + element+e.getMessage()); 
 		}
+		
 	}
 
 	public void switchToDefaultContent() {
 		try {
 			driver.switchTo().defaultContent();
-			logger.log(Level.INFO, "Switched to default content");
+			logSuccess( "Switched to default content");
 		} catch (Exception e) {
-			logger.log(Level.SEVERE, "Exception while switching to default content", e);
+			logFailure("Exception while switching to default content" +e.getMessage()); 
 		}
 	}
 
@@ -317,11 +323,13 @@ public class WebUtils {
 			List<String> windows = new ArrayList<>(driver.getWindowHandles());
 			if (index < windows.size()) {
 				driver.switchTo().window(windows.get(index));
-				logger.log(Level.INFO, "Switched to window index: " + index);
+				logSuccess( "Switched to window index: " + index);
 			} else {
-				logger.log(Level.WARNING, "Window index out of bounds: " + index);
+				logSuccess( "Window index out of bounds: " + index);
 			}
 		} catch (Exception e) {
+			logFailure("Exception while switching to window index: " + index + e.getMessage()); 
+
 			logger.log(Level.SEVERE, "Exception while switching to window index: " + index, e);
 		}
 	}
@@ -329,47 +337,48 @@ public class WebUtils {
 	public void closeCurrentWindow() {
 		try {
 			driver.close();
-			logger.log(Level.INFO, "Closed current window");
+			logSuccess( "Closed current window");
 		} catch (Exception e) {
-			logger.log(Level.SEVERE, "Exception while closing current window", e);
+			logFailure("Exception while closing current window" +e.getMessage()); 
 		}
 	}
 
 	// Page Navigation
+	
 
 	public void navigateTo(String url) {
 		try {
 			driver.get(url);
-			logger.log(Level.INFO, "Navigated to URL: " + url);
+			logSuccess( "Navigated to URL: " + url);
 		} catch (Exception e) {
-			logger.log(Level.SEVERE, "Exception while navigating to URL: " + url, e);
+			logFailure("Exception while navigating to URL: " + url +e.getMessage()); 
 		}
 	}
 
 	public void refreshPage() {
 		try {
 			driver.navigate().refresh();
-			logger.log(Level.INFO, "Page refreshed");
+			logSuccess( "Page refreshed");
 		} catch (Exception e) {
-			logger.log(Level.SEVERE, "Exception while refreshing page", e);
+			logFailure("Exception while refreshing page" +e.getMessage()); 
 		}
 	}
 
 	public void goBack() {
 		try {
 			driver.navigate().back();
-			logger.log(Level.INFO, "Navigated back");
+			logSuccess( "Navigated back");
 		} catch (Exception e) {
-			logger.log(Level.SEVERE, "Exception while navigating back", e);
+			logFailure("Exception while navigating back" +e.getMessage()); 
 		}
 	}
 
 	public void goForward() {
 		try {
 			driver.navigate().forward();
-			logger.log(Level.INFO, "Navigated forward");
+			logSuccess(  "Navigated forward");
 		} catch (Exception e) {
-			logger.log(Level.SEVERE, "Exception while navigating forward", e);
+			logFailure( "Exception while navigating forward" +e.getMessage()); 
 		}
 	}
 
@@ -379,9 +388,9 @@ public class WebUtils {
 		try {
 			JavascriptExecutor js = (JavascriptExecutor) driver;
 			js.executeScript("arguments[0].click();", element);
-			logger.log(Level.INFO, "Clicked element using JavaScript: " + element);
+			logSuccess("Clicked element using JavaScript: " + element);
 		} catch (Exception e) {
-			logger.log(Level.SEVERE, "Exception while clicking element using JS: " + element, e);
+			logFailure("Exception while clicking element using JS: " + element +e.getMessage()); 
 		}
 	}
 
@@ -389,9 +398,9 @@ public class WebUtils {
 		try {
 			JavascriptExecutor js = (JavascriptExecutor) driver;
 			js.executeScript("arguments[0].scrollIntoView(true);", element);
-			logger.log(Level.INFO, "Scrolled to element: " + element);
+			logSuccess("Scrolled to element: " + element);
 		} catch (Exception e) {
-			logger.log(Level.SEVERE, "Exception while scrolling to element: " + element, e);
+			logFailure(  "Exception while scrolling to element: " + element +e.getMessage()); 
 		}
 	}
 
@@ -399,9 +408,9 @@ public class WebUtils {
 		try {
 			JavascriptExecutor js = (JavascriptExecutor) driver;
 			js.executeScript("window.scrollTo(0, document.body.scrollHeight);");
-			logger.log(Level.INFO, "Scrolled to bottom of page");
+			logSuccess("Scrolled to bottom of page");
 		} catch (Exception e) {
-			logger.log(Level.SEVERE, "Exception while scrolling to bottom", e);
+			logFailure("Exception while scrolling to bottom"+e.getMessage()); 
 		}
 	}
 
@@ -409,20 +418,22 @@ public class WebUtils {
 		try {
 			JavascriptExecutor js = (JavascriptExecutor) driver;
 			js.executeScript("arguments[0].style.border='3px solid red'", element);
-			logger.log(Level.INFO, "Highlighted element: " + element);
+			logSuccess("Highlighted element: "  + element);
 		} catch (Exception e) {
-			logger.log(Level.SEVERE, "Exception while highlighting element: " + element, e);
+			logFailure( "Exception while highlighting element: " + element +e.getMessage()); 
 		}
+
 	}
 
 	// File Upload
+	//need to work from here on the logSuccess and logFaliure
 
 	public void uploadFile(WebElement element, String filePath) {
 		try {
 			element.sendKeys(filePath);
-			logger.log(Level.INFO, "Uploaded file: " + filePath);
+			logSuccess("Uploaded file: " + filePath);
 		} catch (Exception e) {
-			logger.log(Level.SEVERE, "Exception while uploading file: " + filePath, e);
+			logFailure( "Exception while uploading file: " + filePath +e.getMessage()); 
 		}
 	}
 
@@ -431,54 +442,54 @@ public class WebUtils {
 	public void waitForElementToBeVisible(By locator) {
 		try {
 			wait.until(ExpectedConditions.visibilityOfElementLocated(locator));
-			logger.log(Level.INFO, "Element visible: " + locator);
+			logSuccess("Element visible: " + locator);
 		} catch (Exception e) {
-			logger.log(Level.WARNING, "Element not visible: " + locator, e);
+			logFailure("Element not visible: " + locator +e.getMessage()); 
 		}
 	}
 
 	public void waitForElementToBeClickable(By locator) {
 		try {
 			wait.until(ExpectedConditions.elementToBeClickable(locator));
-			logger.log(Level.INFO, "Element clickable: " + locator);
+			logSuccess("Element clickable: " + locator);
 		} catch (Exception e) {
-			logger.log(Level.WARNING, "Element not clickable: " + locator, e);
+			logFailure(  "Element not clickable: " + locator+e.getMessage()); 
 		}
 	}
 
 	public void waitForElementToDisappear(By locator) {
 		try {
 			wait.until(ExpectedConditions.invisibilityOfElementLocated(locator));
-			logger.log(Level.INFO, "Element disappeared: " + locator);
+			logSuccess("Element disappeared: " + locator);
 		} catch (Exception e) {
-			logger.log(Level.WARNING, "Element did not disappear: " + locator, e);
+			logFailure( "Element did not disappear: " + locator +e.getMessage()); 
 		}
 	}
 
 	public void waitForTextToBePresent(WebElement element, String text) {
 		try {
 			wait.until(ExpectedConditions.textToBePresentInElement(element, text));
-			logger.log(Level.INFO, "Text '" + text + "' is present in element: " + element);
+			logSuccess("Text '" + text + "' is present in element: " + element);
 		} catch (Exception e) {
-			logger.log(Level.WARNING, "Text '" + text + "' not present in element: " + element, e);
+			logFailure( "Text '" + text + "' not present in element: " + element +e.getMessage()); 
 		}
 	}
 
 	public void waitForURLToContain(String fraction) {
 		try {
 			wait.until(ExpectedConditions.urlContains(fraction));
-			logger.log(Level.INFO, "URL contains: " + fraction);
+			logSuccess( "URL contains: " + fraction);
 		} catch (Exception e) {
-			logger.log(Level.WARNING, "URL does not contain: " + fraction, e);
+			logFailure( "URL does not contain: " + fraction +e.getMessage()); 
 		}
 	}
 
 	public void waitForTitleToBe(String title) {
 		try {
 			wait.until(ExpectedConditions.titleIs(title));
-			logger.log(Level.INFO, "Title is: " + title);
+			logSuccess("Title is: " + title);
 		} catch (Exception e) {
-			logger.log(Level.WARNING, "Title is not: " + title, e);
+			logFailure( "Title is not: " + title +e.getMessage()); 
 		}
 	}
 
@@ -553,22 +564,24 @@ public class WebUtils {
 		}
 	}
 
-	 public boolean validateCurrentURL(String expectedURL) {
-	        try {
-	            String actualURL = driver.getCurrentUrl();
-	            boolean match = expectedURL.equals(actualURL);
-	            String message = "URL validation - Expected: '" + expectedURL + "', Actual: '" + actualURL + "', Match: " + match;
-	            if (match) {
-	                logSuccess(message);
-	            } else {
-	                logFailure(message);
-	            }
-	            return match;
-	        } catch (Exception e) {
-	            logFailure("URL validation failed: " + e.getMessage());
-	            return false;
-	        }
-	    }
+	public boolean validateCurrentURL(String expectedURL) {
+		try {
+			WebDriverWait shortWait = new WebDriverWait(driver, Duration.ofSeconds(5));
+	        shortWait.until(ExpectedConditions.urlToBe(expectedURL));
+			String actualURL = driver.getCurrentUrl();
+			boolean match = expectedURL.equals(actualURL);
+			String message = "URL validation - Expected: '" + expectedURL + "', Actual: '" + actualURL + "', Match: " + match;
+			if (match) {
+				logSuccess(message);
+			} else {
+				logFailure(message);
+			}
+			return match;
+		} catch (Exception e) {
+			logFailure("URL validation failed: " + e.getMessage());
+			return false;
+		}
+	}
 
 	public boolean validateElementCount(By locator, int expectedCount) {
 		try {
@@ -655,10 +668,59 @@ public class WebUtils {
 
 		return false;
 	}
+	public boolean isImageValid(String imageUrl ,String imageName ) {
+		try {
 
-	//broken Url
-	//multiple reports
-	//how to share reports
+			HttpURLConnection connection = (HttpURLConnection) new URL(imageUrl).openConnection();
+			connection.setRequestMethod("GET");
+			connection.setConnectTimeout(5000);
+			connection.setReadTimeout(5000);
+			connection.connect();
+
+			int responseCode = connection.getResponseCode();
+			logger.log(Level.INFO, imageName + " image HTTP response code: " + responseCode);
+
+			return responseCode == HttpURLConnection.HTTP_OK;
+
+		} catch (MalformedURLException e) {
+			logger.log(Level.SEVERE, "Malformed URL for " + imageName + " image.", e);
+		} catch (IOException e) {
+			logger.log(Level.SEVERE, "IO Exception while validating " + imageName + " image.", e);
+		} catch (Exception e) {
+			logger.log(Level.SEVERE, "Unexpected error while validating " + imageName + " image.", e);
+		}
+
+		return false;
+	}
+	public boolean captureScreenshot(String fileName) {
+		try {
+			File srcFile = ((TakesScreenshot) driver).getScreenshotAs(OutputType.FILE);
+			String destDir = "./Screenshots/Prerelease/";
+			File destFile = new File(destDir + fileName + ".png");
+			destFile.getParentFile().mkdirs(); // Create directory if not exist
+
+			Files.copy(srcFile.toPath(), destFile.toPath(), StandardCopyOption.REPLACE_EXISTING);
+
+			getExtentTest().info("Screenshot captured",MediaEntityBuilder.createScreenCaptureFromPath(destFile.getAbsolutePath()).build());
+			logger.log(Level.INFO, "Screenshot captured: " + destFile.getAbsolutePath());
+
+			return true;
+		} catch (Exception e) {
+			logFailure("Failed to capture screenshot: " + e.getMessage());
+			return false;
+		}
+	}
+//Close Single ScriptPOPup
+	public void closeHtmlPopup(By closeButtonLocator) {
+	    try {
+	        wait.until(ExpectedConditions.elementToBeClickable(closeButtonLocator)).click();
+	        logSuccess("Popup closed successfully.");
+	    } catch (Exception e) {
+	        logFailure("Failed to close popup: " + e.getMessage());
+	    }
+	}
+	
+	
+	
 	//github
-
 }

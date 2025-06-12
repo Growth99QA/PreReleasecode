@@ -136,6 +136,7 @@ public class RumaPage {
 
 	public void navigateToHomePage() {
 		webUtils.clickOnElement(rumaLogo);
+		
 	}
 
 	public void validateThankYouPageAfterSubmittingContactForm() {

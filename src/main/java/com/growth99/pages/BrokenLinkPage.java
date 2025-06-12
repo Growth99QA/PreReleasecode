@@ -14,13 +14,13 @@ import org.openqa.selenium.support.PageFactory;
 
 import com.growth99.utils.WebUtils;
 
-public class GooglePage {
+public class BrokenLinkPage {
 
 	WebDriver driver;
 	WebUtils webUtils;
 	Set<String> allLinks = new HashSet<>();
 
-	public GooglePage(WebDriver driver){
+	public BrokenLinkPage(WebDriver driver){
 		this.driver= driver;
 		PageFactory.initElements(driver, this);
 		webUtils=new WebUtils(driver);
@@ -35,16 +35,29 @@ public class GooglePage {
 	WebElement searchBox;
 
 	public boolean isNextButtonPresent() {
-		return	webUtils.isElementDisplayed(nextButton);
+		boolean status = false;
+		try {
+			status=nextButton.isDisplayed();
+		}catch (Exception e) {
+			e.printStackTrace();
+		}
+		return status;
     }
 	
 	public void clickOnNextBtn() {
-		webUtils.clickOnElement(nextButton);
+		try {
+		nextButton.click();
+		}catch (Exception e) {
+			e.printStackTrace();
+		}
 	}
 	
 	public void enterSiteInGoogleSearch(String site) {
-		
-		webUtils.enterText(searchBox, site);
+		try {
+		searchBox.sendKeys(site);
+		}catch (Exception e) {
+			e.printStackTrace();
+		}
 		Actions myActions = new Actions(driver);
 		myActions.keyDown(Keys.ENTER).keyDown(Keys.ENTER).build().perform();
 		try {
@@ -86,19 +99,11 @@ public class GooglePage {
 	            }
 	        }
 	    }
-	 public void validateAllLinks(List<String> websites) {
-	        for (String url : websites) {
-	            if (webUtils.isLinkBroken(url)) {
-	                System.out.println("❌ Broken: " + url);
-	            } else {
-	                System.out.println("✅ Working: " + url);
-	            }
-	        }
-	    }
 
 	 public void validateSiteUrl(String site, String domain) {
 		 enterSiteInGoogleSearch(site);
 		 collectAllLinks(domain);
 		 validateAllLinks();
+		 allLinks.clear();
 	 }
 }

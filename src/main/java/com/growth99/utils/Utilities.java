@@ -16,5 +16,9 @@ public class Utilities {
 		String randomNumber = new SimpleDateFormat("ddMMmmss").format(new Date());
 		return "99"+randomNumber;
 	}
+	
+	public static String getFormattedDate( ) {
+	    return new SimpleDateFormat("ddMMyyyy").format(new Date());
+	}
 
 }

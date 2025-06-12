@@ -1,0 +1,13 @@
+{
+	
+	"validateChatbotLogo":{
+	 "assertChatbotLogoValidation": "Chatbot Logo validation failed"
+  },
+  "validateSingleScript":{
+	 "assertSingleScriptValidation": "SingleScript validation failed"
+	 },
+	 "validatePrivacyPolicy":{
+	  "assertPrivacyPolicy": "Privacy Policy on footer validation failed"
+	 }
+	 
+}
