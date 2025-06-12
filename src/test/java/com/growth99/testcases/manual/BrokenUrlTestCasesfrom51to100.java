@@ -8,7 +8,7 @@ import com.growth99.pages.RumaPage;
 import org.openqa.selenium.WebDriver;
 import org.testng.annotations.*;
 
-public class BrokenUrlTestCases extends BaseClass {
+public class BrokenUrlTestCasesfrom51to100 extends BaseClass {
 
     WebDriver driver;
     public JsonNode rumaJsonData;
