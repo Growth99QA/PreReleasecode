@@ -12,14 +12,14 @@ import com.growth99.base.BaseClass;
 import com.growth99.pages.HeroMediaCheckPage;
 
 
-public class HeroMediaCheck extends BaseClass {
+public class HamburgerAndHeaderCheck extends BaseClass {
 
 	WebDriver driver;
 	public JsonNode PreReleaseDataJsonData;
 	HeroMediaCheckPage HeroMediaCheckPage;
 
 
-	HeroMediaCheck(){
+	HamburgerAndHeaderCheck(){
 		super();
 		PreReleaseDataJsonData = getJsonData("PreReleaseData.json");
 	}
@@ -30,9 +30,10 @@ public class HeroMediaCheck extends BaseClass {
 		HeroMediaCheckPage = new HeroMediaCheckPage(driver);
 	}
 
+	
 
 	@Test(priority = 0)
-	public void validateHeroimageandvideoloading(){
+	public void validateHambrugerMenu(){
 		//JsonNode testData=	PreReleaseDataJsonData.get("validateHeroimageandvideoloading");
 		HeroMediaCheckPage.validateHeroMedialoading();
 		driver.manage().window().setSize(new Dimension(390, 840)); // iPhone 12 size

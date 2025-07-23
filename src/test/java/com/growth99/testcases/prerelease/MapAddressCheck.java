@@ -7,37 +7,54 @@ import org.openqa.selenium.WebElement;
 import org.openqa.selenium.chrome.ChromeDriver;
 
 import com.growth99.utils.Utilities;
+import org.openqa.selenium.By;
+import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.WebElement;
+import org.openqa.selenium.chrome.ChromeDriver;
+
+import java.util.concurrent.TimeUnit;
+
 
 public class MapAddressCheck {
 
-    public static void main(String[] args) {
-        WebDriver driver = new ChromeDriver();
+	public static void main(String[] args) throws InterruptedException {
+		WebDriver driver = new ChromeDriver();
+		driver.manage().timeouts().implicitlyWait(10, TimeUnit.SECONDS);
 
-        // Replace with actual site
-        driver.get("https://ada1.gogroth.com/contact");
-        driver.manage().window().maximize();
-        driver. manage().timeouts().implicitlyWait(Duration.ofSeconds(Utilities.IMPLICIT_WAIT));
+		// 1. Open client website and extract address
+		driver.get("https://ada1.gogroth.com/contact/"); // Replace with actual URL
+		WebElement websiteAddressElement = driver.findElement(By.xpath("//div[contains(text(), '1850 W Ashton Blvd Ste 100, Lehi, UT 84043, United States')]")); // Update with actual locator
+		String websiteAddress = websiteAddressElement.getText().trim();
+		System.out.println("Website Address: " + websiteAddress);
 
-        // Step 1: Locate address on site (map or contact section)
-        WebElement addressElement = driver.findElement(By.xpath("//div[@class='address']"));
-        
+		// 2. Open Google and search business
+		driver.get("https://www.google.com/");
+		WebElement searchBox = driver.findElement(By.name("q"));
+		searchBox.sendKeys("ruma"); // Replace with actual business name
+		searchBox.submit();
 
-        String websiteAddress = addressElement.getText().trim();
-        System.out.println("Website Address: " + websiteAddress);
+		// 3. Click on Google Maps link
+		Thread.sleep(3000); // Wait for results to load
+		WebElement mapsLink = driver.findElement(By.partialLinkText("Maps"));
+		mapsLink.click();
 
-        // Step 2: Expected GMB address (from test data)
-        String expectedGMBAddress = "1850 W Ashton Blvd Ste 100, Lehi, UT 84043, United States";
+		// 4. Extract address from Google Map
+		Thread.sleep(5000); // Wait for Maps to load
+		WebElement gmbAddressElement = driver.findElement(By.xpath("//div[contains(@aria-label,'Address') or contains(text(),'Address')]/following-sibling::div"));
+		String gmbAddress = gmbAddressElement.getText().trim();
+		System.out.println("Google Maps Address: " + gmbAddress);
 
-        // Step 3: Compare
-        if (websiteAddress.equalsIgnoreCase(expectedGMBAddress)) {
-            System.out.println("PASS: Website address matches GMB address.");
-        } else {
-            System.out.println("FAIL: Website address does not match GMB address.");
-        }
+		// 5. Compare both addresses
+		if (websiteAddress.equalsIgnoreCase(gmbAddress)) {
+			System.out.println("✅ PASS: Website and GMB addresses match.");
+		} else {
+			System.out.println("❌ FAIL: Website and GMB addresses do NOT match.");
+		}
 
-        driver.quit();
-    }
+		driver.quit();
+	}
 }
+
 
 
 
