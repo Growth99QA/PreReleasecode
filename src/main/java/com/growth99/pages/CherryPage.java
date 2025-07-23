@@ -1,14 +1,9 @@
 package com.growth99.pages;
 
-import java.net.HttpURLConnection;
-import java.net.URL;
-
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
-import org.openqa.selenium.interactions.Actions;
 import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.PageFactory;
-
 import com.growth99.utils.WebUtils;
 
 public class CherryPage {

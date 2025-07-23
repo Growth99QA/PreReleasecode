@@ -1,14 +1,9 @@
 package com.growth99.pages;
 
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.PageFactory;
-
-import com.growth99.utils.Utilities;
 import com.growth99.utils.WebUtils;
 
 public class ChatBotLogoValidationPage {
@@ -34,8 +29,9 @@ public class ChatBotLogoValidationPage {
 		System.out.println("Extracted URL: " + url);
 		webUtils.isImageValid(url, "Chatbot Logo");
 		webUtils.captureScreenshot("chatbotlogoDesktop");
-		webUtils.captureScreenshot("chatbotlogoiphone");
+	  	
 	}
+	
 	public void validateChatbotLogoOnIphone() {
 		String style = webUtils.getAttribute(chatBotLogo, "style");
 		System.out.println(style);
@@ -47,6 +43,7 @@ public class ChatBotLogoValidationPage {
 		webUtils.captureScreenshot("chatbotlogoiphone");
 
 	}
+	 
 	public void validateChatbotLogoOnIpad() {
 		String style = webUtils.getAttribute(chatBotLogo, "style");
 		System.out.println(style);
@@ -56,6 +53,8 @@ public class ChatBotLogoValidationPage {
 		System.out.println("Extracted URL: " + url);
 		webUtils.isImageValid(url, "Chatbot Logo");
 		webUtils.captureScreenshot("chatbotlogoipad");
+		webUtils.clickOnElement(chatBotLogo);
+		webUtils.captureScreenshot("chatbotlogoDesktopch");
 
 	}
 	

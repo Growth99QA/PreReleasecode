@@ -68,6 +68,14 @@ public class RumaPage {
 
 	@FindBy (xpath="//img[contains(@data-dt-location,'attachment/1-22/')]")
 	WebElement botoxServiceImage;
+	@FindBy(xpath = "//ul[@id='split_left-menu']//span[text()='Services']")
+    WebElement service;
+    
+    @FindBy (xpath= "//ul[@id='split_left-menu']//span[text()='Injectables']")
+    WebElement injectable;
+    
+    @FindBy (xpath= "//ul[@id='split_left-menu']//span[text()='Renuva']")
+    WebElement renuva;
 
 
 	public void switchBackToDefaultContent()
@@ -138,6 +146,17 @@ public class RumaPage {
 		webUtils.clickOnElement(rumaLogo);
 		
 	}
+	@FindBy (xpath="//nav[@class='navigation']//span[contains(text(),'Blog')]")
+
+		WebElement BlogMenu;
+
+
+
+	public void ClickOnBlog() {
+
+			webUtils.clickOnElement(BlogMenu);
+
+		}
 
 	public void validateThankYouPageAfterSubmittingContactForm() {
 
@@ -188,5 +207,9 @@ public class RumaPage {
 		boolean isValid = webUtils.isImageValid(botoxServiceImage, "Botox service Image");
 		return isValid;
 	}
-
+	
 }
+
+
+
+
