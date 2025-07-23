@@ -3,12 +3,9 @@ package com.growth99.utils;
 import org.openqa.selenium.*;
 import org.openqa.selenium.interactions.Actions;
 import org.openqa.selenium.support.ui.*;
-
 import com.aventstack.extentreports.ExtentTest;
 import com.aventstack.extentreports.MediaEntityBuilder;
 import com.aventstack.extentreports.Status;
-
-
 import java.io.File;
 import java.io.IOException;
 import java.net.HttpURLConnection;
@@ -72,6 +69,7 @@ public class WebUtils {
 			logFailure("Failed to enter text: " + e.getMessage());
 		}
 	}
+
 
 	public void clearAndEnterText(WebElement element, String text) {
 		try {
@@ -287,7 +285,7 @@ public class WebUtils {
 	}
 
 	// Frame & Window Handling
-	
+
 
 
 	public void switchToFrameByIndex(int index) {
@@ -306,7 +304,7 @@ public class WebUtils {
 		} catch (Exception e) {
 			logFailure("Exception while switching to frame by element: " + element+e.getMessage()); 
 		}
-		
+
 	}
 
 	public void switchToDefaultContent() {
@@ -330,7 +328,6 @@ public class WebUtils {
 		} catch (Exception e) {
 			logFailure("Exception while switching to window index: " + index + e.getMessage()); 
 
-			logger.log(Level.SEVERE, "Exception while switching to window index: " + index, e);
 		}
 	}
 
@@ -344,7 +341,7 @@ public class WebUtils {
 	}
 
 	// Page Navigation
-	
+
 
 	public void navigateTo(String url) {
 		try {
@@ -426,7 +423,7 @@ public class WebUtils {
 	}
 
 	// File Upload
-	//need to work from here on the logSuccess and logFaliure
+
 
 	public void uploadFile(WebElement element, String filePath) {
 		try {
@@ -498,56 +495,90 @@ public class WebUtils {
 	public boolean isElementDisplayed(WebElement element) {
 		try {
 			boolean displayed = element.isDisplayed();
-			logger.log(Level.INFO, "Element displayed: " + displayed);
+			String  message="Element displayed: " + displayed;
+			if (displayed) {
+				logSuccess(message);
+			} else {
+				logFailure(message);
+			}
 			return displayed;
 		} catch (Exception e) {
-			logger.log(Level.WARNING, "Element not displayed", e);
+			logFailure("Element not displayed"+ e.getMessage());
 			return false;
 		}
 	}
+
 
 	public boolean isElementEnabled(WebElement element) {
 		try {
 			boolean enabled = element.isEnabled();
-			logger.log(Level.INFO, "Element enabled: " + enabled);
+			String message= "Element enabled: " + enabled;
+
+
+			if (enabled) {
+				logSuccess(message);
+			} else {
+				logFailure(message);
+			}
 			return enabled;
 		} catch (Exception e) {
-			logger.log(Level.WARNING, "Element not enabled", e);
+			logFailure("Element not selected"+ e.getMessage());
 			return false;
 		}
 	}
 
+
 	public boolean isElementSelected(WebElement element) {
 		try {
 			boolean selected = element.isSelected();
-			logger.log(Level.INFO, "Element selected: " + selected);
+			String message= "Element selected: " + selected;
+
+			if (selected) {
+				logSuccess(message);
+			} else {
+				logFailure(message);
+			}
 			return selected;
 		} catch (Exception e) {
-			logger.log(Level.WARNING, "Element not selected", e);
+			logFailure("Element not selected"+ e.getMessage());
 			return false;
 		}
 	}
+
 
 	public boolean validateText(WebElement element, String expectedText) {
 		try {
 			String actualText = getText(element);
 			boolean match = expectedText.equals(actualText);
-			logger.log(Level.INFO, "Text validation: expected='" + expectedText + "', actual='" + actualText + "', result=" + match);
+			String message= "Text validation: expected='" + expectedText + "', actual='" + actualText + "', result=" + match;
+
+			if (match) {
+				logSuccess(message);
+			} else {
+				logFailure(message);
+			}
 			return match;
 		} catch (Exception e) {
-			logger.log(Level.WARNING, "Text validation failed", e);
+			logFailure("Text validation failed"+ e.getMessage());
 			return false;
 		}
 	}
+
 
 	public boolean validateAttribute(WebElement element, String attribute, String expectedValue) {
 		try {
 			String actualValue = getAttribute(element, attribute);
 			boolean match = expectedValue.equals(actualValue);
-			logger.log(Level.INFO, "Attribute validation: " + attribute + ", expected='" + expectedValue + "', actual='" + actualValue + "', result=" + match);
+			String message= "Attribute validation: " + attribute + ", expected='" + expectedValue + "', actual='" + actualValue + "', result=" + match;
+
+			if (match) {
+				logSuccess(message);
+			} else {
+				logFailure(message);
+			}
 			return match;
 		} catch (Exception e) {
-			logger.log(Level.WARNING, "Attribute validation failed", e);
+			logFailure("Attribute validation failed"+ e.getMessage());
 			return false;
 		}
 	}
@@ -556,18 +587,25 @@ public class WebUtils {
 		try {
 			String actualTitle = driver.getTitle();
 			boolean match = expectedTitle.equals(actualTitle);
-			logger.log(Level.INFO, "Page title validation: expected='" + expectedTitle + "', actual='" + actualTitle + "', result=" + match);
+			String message= "Page title validation: expected='" + expectedTitle + "', actual='" + actualTitle + "', result=" + match;
+
+			if (match) {
+				logSuccess(message);
+			} else {
+				logFailure(message);
+			}
 			return match;
 		} catch (Exception e) {
-			logger.log(Level.WARNING, "Page title validation failed", e);
+			logFailure("Page title validation failed"+ e.getMessage());
 			return false;
 		}
 	}
 
+
 	public boolean validateCurrentURL(String expectedURL) {
 		try {
 			WebDriverWait shortWait = new WebDriverWait(driver, Duration.ofSeconds(5));
-	        shortWait.until(ExpectedConditions.urlToBe(expectedURL));
+			shortWait.until(ExpectedConditions.urlToBe(expectedURL));
 			String actualURL = driver.getCurrentUrl();
 			boolean match = expectedURL.equals(actualURL);
 			String message = "URL validation - Expected: '" + expectedURL + "', Actual: '" + actualURL + "', Match: " + match;
@@ -587,15 +625,22 @@ public class WebUtils {
 		try {
 			int actualCount = driver.findElements(locator).size();
 			boolean match = actualCount == expectedCount;
-			logger.log(Level.INFO, "Element count validation for " + locator + ": expected=" + expectedCount + ", actual=" + actualCount + ", result=" + match);
+			String message ="Element count validation for " + locator + ": expected=" + expectedCount + ", actual=" + actualCount + ", result=" + match;
+			if (match) {
+				logSuccess(message);
+			} else {
+				logFailure(message);
+			}
 			return match;
 		} catch (Exception e) {
-			logger.log(Level.WARNING, "Element count validation failed", e);
+			logFailure("Element count validation failed" + e.getMessage());
 			return false;
 		}
 	}
 
+
 	// ----------- Utility ------------
+	//need to work from here on the logSuccess and logFaliure
 
 	public List<WebElement> findElements(By locator) {
 		try {
@@ -704,23 +749,267 @@ public class WebUtils {
 			getExtentTest().info("Screenshot captured",MediaEntityBuilder.createScreenCaptureFromPath(destFile.getAbsolutePath()).build());
 			logger.log(Level.INFO, "Screenshot captured: " + destFile.getAbsolutePath());
 
+			logSuccess( "Screenshot captured: " + destFile.getAbsolutePath());
+
 			return true;
 		} catch (Exception e) {
 			logFailure("Failed to capture screenshot: " + e.getMessage());
 			return false;
 		}
 	}
-//Close Single ScriptPOPup
+	//Close Single ScriptPOPup
 	public void closeHtmlPopup(By closeButtonLocator) {
-	    try {
-	        wait.until(ExpectedConditions.elementToBeClickable(closeButtonLocator)).click();
-	        logSuccess("Popup closed successfully.");
-	    } catch (Exception e) {
-	        logFailure("Failed to close popup: " + e.getMessage());
+		try {
+			wait.until(ExpectedConditions.elementToBeClickable(closeButtonLocator)).click();
+			logSuccess("Popup closed successfully.");
+		} catch (Exception e) {
+			logFailure("Failed to close popup: " + e.getMessage());
+		}
+	}
+	public void checkMoreButtonsOnPages(WebDriver driver, List<String> urls) {
+		for (String url : urls) {
+			try {
+				driver.get(url);
+				System.out.println("Checking URL: " + url);
+
+				By moreButtonsLocator = By.xpath(
+						"//*[contains(translate(normalize-space(text()), " +
+								"'ABCDEFGHIJKLMNOPQRSTUVWXYZ', 'abcdefghijklmnopqrstuvwxyz'), 'read more') " +
+								"or contains(translate(normalize-space(text()), " +
+								"'ABCDEFGHIJKLMNOPQRSTUVWXYZ', 'abcdefghijklmnopqrstuvwxyz'), 'learn more') " +
+								"or contains(translate(normalize-space(text()), " +
+								"'ABCDEFGHIJKLMNOPQRSTUVWXYZ', 'abcdefghijklmnopqrstuvwxyz'), 'view more')]"
+						);
+
+				List<WebElement> moreButtons = driver.findElements(moreButtonsLocator);
+
+				if (moreButtons.isEmpty()) {
+					logSuccess("PASS: No 'Read More', 'Learn More', or 'View More' buttons found on: " + url);
+				} else {
+					logFailure("FAIL: Found " + moreButtons.size() + " button(s) on: " + url);
+					for (WebElement button : moreButtons) {
+						System.out.println("Found: " + button.getText().trim());
+					}
+				}
+			} catch (Exception e) {
+				logFailure("ERROR on URL: " + url + " - " + e.getMessage());
+			}
+		}
+	}
+
+
+	//validate hero image and hero video 
+
+	// Full method
+	public void validateHeroMedia(By videoLocator, By imageLocator) {
+		boolean isVideoVisible = false;
+		boolean isImageVisible = false;
+
+		if (videoLocator != null) {
+			try {
+				WebElement videoElement = driver.findElement(videoLocator);
+				isVideoVisible = videoElement.isDisplayed();
+			} catch (Exception e) {
+				logger.log(Level.INFO, "ℹ️ Video not found or not visible.");
+			}
+		}
+
+		if (imageLocator != null) {
+			try {
+				WebElement imageElement = driver.findElement(imageLocator);
+				isImageVisible = imageElement.isDisplayed();
+			} catch (Exception e) {
+				logger.log(Level.INFO, "ℹ️ Image not found or not visible.");
+			}
+		}
+
+		if (isVideoVisible && !isImageVisible) {
+			logger.log(Level.INFO, "✅ PASS: Only hero video is present.");
+		} else if (!isVideoVisible && isImageVisible) {
+			logger.log(Level.INFO, "✅ PASS: Only hero image is present.");
+		} else if (!isVideoVisible && !isImageVisible) {
+			logger.log(Level.SEVERE, "❌ FAIL: Neither video nor image is present.");
+		} else {
+			logger.log(Level.SEVERE, "❌ FAIL: Both video and image are present — only one should be visible.");
+		}
+	}
+
+	public void verifyMobileNumber(String xpath) {
+		try {
+			WebElement mobile = driver.findElement(By.xpath(xpath));
+			System.out.println("✅ Mobile Number found: " + mobile.getText());
+		} catch (Exception e) {
+			System.out.println("❌ Mobile Number not found");
+		}
+	}
+
+	public void verifyEmailId(String xpath) {
+		try {
+			WebElement email = driver.findElement(By.xpath(xpath));
+			System.out.println("✅ Email ID found: " + email.getText());
+		} catch (Exception e) {
+			System.out.println("❌ Email ID not found");
+		}
+	}
+
+	public void verifySocialMediaIcons(String xpath) {
+		try {
+			List<WebElement> socialIcons = driver.findElements(By.xpath(xpath));
+			if (!socialIcons.isEmpty()) {
+				System.out.println("Social Media Icons found: " + socialIcons.size());
+			} else {
+				System.out.println("Social Media Icons not found");
+			}
+		} catch (Exception e) {
+			System.out.println("Error while checking Social Media Icons: " + e.getMessage());
+		}
+	}
+
+
+	public void checkAndClickHamburgerMenuMobile(String xpath) {
+		try {
+			// Set mobile view (iPhone X)
+			driver.manage().window().setSize(new Dimension(375, 812));
+			wait.until(ExpectedConditions.presenceOfElementLocated(By.xpath(xpath)));
+
+			WebElement hamburgerMenu = driver.findElement(By.xpath(xpath));
+
+			if (hamburgerMenu.isDisplayed()) {
+				System.out.println("✅ Hamburger Menu is visible in mobile view");
+
+				// Check sticky/fixed position
+				String position = (String) ((JavascriptExecutor) driver)
+						.executeScript("return window.getComputedStyle(arguments[0]).position;", hamburgerMenu);
+
+				if ("sticky".equalsIgnoreCase(position) || "fixed".equalsIgnoreCase(position)) {
+					System.out.println("✅ Hamburger Menu is sticky: " + position);
+				} else {
+					System.out.println("❌ Hamburger Menu is not sticky: " + position);
+				}
+
+				// Click hamburger using utility method
+				clickOnElement(hamburgerMenu);
+
+			} else {
+				System.out.println("❌ Hamburger Menu is not visible");
+			}
+
+		} catch (Exception e) {
+			System.out.println("❌ Error while handling hamburger menu: " + e.getMessage());
+		}
+	}
+	public static void validateLinks(WebDriver driver, String baseUrl) {
+	    driver.get(baseUrl);
+
+	    List<WebElement> links = driver.findElements(By.tagName("a"));
+	    System.out.println("🔍 Total links found: " + links.size());
+
+	    for (int i = 0; i < links.size(); i++) {
+	        try {
+	            // Re-fetch the element in each loop iteration to avoid stale reference
+	            WebElement link = driver.findElements(By.tagName("a")).get(i);
+
+	            String url = link.getAttribute("href");
+	            String target = link.getAttribute("target");
+
+	            if (url == null || url.isEmpty() || url.startsWith("javascript:") || url.startsWith("mailto:") || url.startsWith("tel:")) {
+	                System.out.println("⚠️ Skipping invalid/mailto/tel link: " + url);
+	                continue;
+	            }
+
+	            if (url.startsWith("/")) {
+	                url = baseUrl.endsWith("/") ? baseUrl.substring(0, baseUrl.length() - 1) + url : baseUrl + url;
+	            }
+
+	            if ("_blank".equalsIgnoreCase(target)) {
+	                System.out.println("🔗 Link opens in new tab: " + url + " (not considered broken)");
+	                continue;
+	            }
+
+	            HttpURLConnection connection = (HttpURLConnection) new URL(url).openConnection();
+	            connection.setConnectTimeout(5000);
+	            connection.connect();
+
+	            int statusCode = connection.getResponseCode();
+	            if (statusCode >= 400) {
+	                System.out.println("❌ Broken link: " + url + " -- Status code: " + statusCode);
+	            } else {
+	                System.out.println("✅ Valid link: " + url + " -- Status code: " + statusCode);
+	            }
+
+	            connection.disconnect();
+	        } catch (Exception e) {
+	            System.out.println("⚠️ Error occurred while validating link: " + e.getMessage());
+	        }
 	    }
 	}
 	
-	
-	
-	//github
+	 public static void validateAllWebsiteLinks(WebDriver driver, String baseUrl) {
+	        driver.get(baseUrl);
+
+	        List<WebElement> links = driver.findElements(By.tagName("a"));
+	        System.out.println("🔍 Total links found on " + baseUrl + ": " + links.size());
+
+	        for (int i = 0; i < links.size(); i++) {
+	            try {
+	                // Re-fetch element to avoid stale reference
+	                WebElement link = driver.findElements(By.tagName("a")).get(i);
+
+	                String url = link.getAttribute("href");
+	                String target = link.getAttribute("target");
+
+	                if (url == null || url.isEmpty() ||
+	                    url.startsWith("javascript:") ||
+	                    url.startsWith("mailto:") ||
+	                    url.startsWith("tel:")) {
+	                    System.out.println("⚠️ Skipping invalid/mailto/tel link: " + url);
+	                    continue;
+	                }
+
+	                if (url.startsWith("/")) {
+	                    url = baseUrl.endsWith("/") ?
+	                          baseUrl.substring(0, baseUrl.length() - 1) + url :
+	                          baseUrl + url;
+	                }
+
+	                if ("_blank".equalsIgnoreCase(target)) {
+	                    System.out.println("🔗 Opens in new tab (not broken): " + url);
+	                    continue;
+	                }
+
+	                HttpURLConnection connection = (HttpURLConnection) new URL(url).openConnection();
+	                connection.setConnectTimeout(5000);
+	                connection.connect();
+
+	                int statusCode = connection.getResponseCode();
+	                if (statusCode >= 400) {
+	                    System.out.println("❌ Broken link: " + url + " -- Status code: " + statusCode);
+	                } else {
+	                    System.out.println("✅ Valid link: " + url + " -- Status code: " + statusCode);
+	                }
+
+	                connection.disconnect();
+	            } catch (Exception e) {
+	                System.out.println("⚠️ Error while validating link: " + e.getMessage());
+	            }
+	        }
+	        System.out.println("*************************************************** " );
+	    }
+	 
+	 public void clickTheElement(WebElement element) {
+			try {
+				((JavascriptExecutor) driver).executeScript("arguments[0].scrollIntoView({block: 'center'});", element);
+				wait.until(ExpectedConditions.elementToBeClickable(element));
+				element.click();
+				logSuccess("Clicked on element: " + getElementLocator(element));
+			} catch (ElementClickInterceptedException e) {
+				// Fallback to JS click if intercepted
+				((JavascriptExecutor) driver).executeScript("arguments[0].click();", element);
+				logSuccess("Clicked on element with JS fallback: " + getElementLocator(element));
+			} catch (Exception e) {
+				logFailure("Failed to click on element: " + e.getMessage());
+			}
+		}
+
 }
+
